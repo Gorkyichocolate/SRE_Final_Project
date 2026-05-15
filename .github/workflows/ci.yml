@@ -14,9 +14,13 @@ on:
 
 jobs:
 
-  build-test-and-push:
+  build-test-and-docker:
 
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: mini-ecommerce
 
     steps:
 
@@ -39,4 +43,11 @@ jobs:
         run: go build ./cmd/api
 
       - name: Build Docker image
-        run: docker build -f deployments/docker/Dockerfile -t mini-ecommerce .
+        run: |
+          docker build \
+          -f deployments/docker/Dockerfile \
+          -t mini-ecommerce \
+          .
+
+      - name: Pipeline Success
+        run: echo "CI pipeline completed successfully"
