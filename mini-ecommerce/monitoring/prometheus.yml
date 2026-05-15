@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+rule_files:
+  - "alert.rules.yml"
+
+scrape_configs:
+
+  - job_name: "mini-ecommerce"
+
+    metrics_path: /metrics
+
+    static_configs:
+      - targets:
+          - "app:8080"
+
+  - job_name: "prometheus"
+
+    static_configs:
+      - targets:
+          - "localhost:9090"

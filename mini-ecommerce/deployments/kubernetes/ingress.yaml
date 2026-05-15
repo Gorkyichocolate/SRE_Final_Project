@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: mini-ecommerce-ingress
+
+spec:
+  rules:
+    - host: mini-ecommerce.local
+
+      http:
+        paths:
+          - path: /
+
+            pathType: Prefix
+
+            backend:
+              service:
+                name: mini-ecommerce-service
+
+                port:
+                  number: 80

@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: mini-ecommerce
+
+  labels:
+    app: mini-ecommerce
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: mini-ecommerce
+
+  template:
+    metadata:
+      labels:
+        app: mini-ecommerce
+
+    spec:
+      containers:
+
+        - name: mini-ecommerce
+
+          image: yourdockerhubusername/mini-ecommerce:latest
+
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8080
+
+          env:
+
+            - name: PORT
+              value: "8080"
+
+            - name: DB_HOST
+              value: postgres
+
+            - name: DB_PORT
+              value: "5432"
+
+            - name: DB_USER
+              value: postgres
+
+            - name: DB_PASSWORD
+              value: postgres
+
+            - name: DB_NAME
+              value: ecommerce
+
+            - name: JWT_SECRET
+              value: super-secret-key
+
+          resources:
+
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          livenessProbe:
+
+            httpGet:
+              path: /health
+              port: 8080
+
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          readinessProbe:
+
+            httpGet:
+              path: /health
+              port: 8080
+
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
