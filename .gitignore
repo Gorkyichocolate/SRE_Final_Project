@@ -1,0 +1,12 @@
+mini-ecommerce/venv/
+mini-ecommerce/__pycache__/
+
+mini-ecommerce/.env
+
+*.log
+
+.idea/
+.vscode/
+
+terraform.tfstate
+terraform.tfstate.backup
