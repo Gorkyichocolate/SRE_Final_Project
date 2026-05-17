@@ -1,10 +1,16 @@
 groups:
-  - name: app-alerts
+
+  - name: mini-ecommerce-alerts
 
     rules:
-      - alert: HighCPUUsage
 
-        expr: rate(process_cpu_seconds_total[1m]) > 0.8
+      - alert: HighRequestLatency
+
+        expr: |
+          rate(http_request_duration_seconds_sum[1m])
+          /
+          rate(http_request_duration_seconds_count[1m])
+          > 1
 
         for: 1m
 
@@ -12,4 +18,74 @@ groups:
           severity: warning
 
         annotations:
-          summary: High CPU usage detected
+          summary: "High request latency detected"
+          description: "Average request latency is above 1 second"
+
+      - alert: HighErrorRate
+
+        expr: |
+          rate(http_requests_total{status="500"}[1m]) > 0.05
+
+        for: 1m
+
+        labels:
+          severity: critical
+
+        annotations:
+          summary: "High error rate"
+          description: "Application is returning many 500 responses"
+
+      - alert: HighCPUUsage
+
+        expr: |
+          rate(process_cpu_seconds_total[1m]) > 0.8
+
+        for: 1m
+
+        labels:
+          severity: warning
+
+        annotations:
+          summary: "High CPU usage"
+          description: "Application CPU usage is above 80%"
+
+      - alert: HeavyEndpointSpam
+
+        expr: |
+          increase(heavy_requests_total[1m]) > 20
+
+        for: 30s
+
+        labels:
+          severity: warning
+
+        annotations:
+          summary: "Heavy endpoint traffic spike"
+          description: "Heavy endpoint received too many requests"
+
+      - alert: ServiceDown
+
+        expr: up == 0
+
+        for: 30s
+
+        labels:
+          severity: critical
+
+        annotations:
+          summary: "Service is down"
+          description: "Prometheus target is unreachable"
+
+      - alert: TooManyOrders
+
+        expr: |
+          increase(orders_created_total[1m]) > 50
+
+        for: 1m
+
+        labels:
+          severity: info
+
+        annotations:
+          summary: "High order creation rate"
+          description: "Large spike in orders detected"

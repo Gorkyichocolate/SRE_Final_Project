@@ -5,6 +5,7 @@ metadata:
   name: mini-ecommerce-hpa
 
 spec:
+
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
@@ -13,7 +14,28 @@ spec:
   minReplicas: 1
   maxReplicas: 5
 
+  behavior:
+
+    scaleUp:
+
+      stabilizationWindowSeconds: 30
+
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 15
+
+    scaleDown:
+
+      stabilizationWindowSeconds: 60
+
+      policies:
+        - type: Percent
+          value: 50
+          periodSeconds: 30
+
   metrics:
+
     - type: Resource
 
       resource:
